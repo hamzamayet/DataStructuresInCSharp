@@ -20,10 +20,26 @@ namespace DataStructuresInCSharp
             this.items = new int[capacity];
         }
 
+        public int Size
+        {
+            get
+            {
+                return size;
+            }
+        }
+
+        public bool IsEmpty
+        {
+            get
+            {
+                return size == 0;
+            }
+        }
+
         /** @param parentIndex The index of the parent element.
             @return The index of the left child.
         **/
-        public int getLeftChildIndex(int parentIndex)
+        protected int getLeftChildIndex(int parentIndex)
         {
             return 2 * parentIndex + 1;
         }
@@ -31,7 +47,7 @@ namespace DataStructuresInCSharp
         /** @param parentIndex The index of the parent element.
             @return The index of the right child.
         **/
-        public int getRightChildIndex(int parentIndex)
+        protected int getRightChildIndex(int parentIndex)
         {
             return 2 * parentIndex + 2;
         }
@@ -39,7 +55,7 @@ namespace DataStructuresInCSharp
         /** @param childIndex The index of the child element.
             @return The index of the parent element.
         **/
-        public int getParentIndex(int childIndex)
+        protected int getParentIndex(int childIndex)
         {
             return (childIndex - 1) / 2;
         }
@@ -98,7 +114,7 @@ namespace DataStructuresInCSharp
         /** @param indexOne The first index for the pair of elements being swapped.
             @param indexTwo The second index for the pair of elements being swapped.
         **/
-        public void swap(int indexOne, int indexTwo)
+        protected void swap(int indexOne, int indexTwo)
         {
             int temp = items[indexOne];
             items[indexOne] = items[indexTwo];
@@ -106,7 +122,7 @@ namespace DataStructuresInCSharp
         }
 
         /** Doubles underlying array if capacity is reached. **/
-        public void ensureCapacity()
+        protected void ensureCapacity()
         {
             if (size == capacity)
             {
@@ -128,7 +144,7 @@ namespace DataStructuresInCSharp
         }
 
         /** @throws IllegalStateException if Heap is empty. **/
-        public void isEmpty(String methodName)
+        private void isEmpty(String methodName)
         {
             if (size == 0)
             {
@@ -169,15 +185,15 @@ namespace DataStructuresInCSharp
         }
 
         /** Swap values down the Heap. **/
-        public abstract void heapifyDown();
+        protected abstract void heapifyDown();
 
         /** Swap values up the Heap. **/
-        public abstract void heapifyUp();
+        protected abstract void heapifyUp();
     }
 
     public class MaxHeap : Heap
     {
-        public override void heapifyDown()
+        protected override void heapifyDown()
         {
             int index = 0;
             while (hasLeftChild(index))
@@ -203,7 +219,7 @@ namespace DataStructuresInCSharp
             }
         }
 
-        public override void heapifyUp()
+        protected override void heapifyUp()
         {
             int index = size - 1;
 
@@ -219,7 +235,7 @@ namespace DataStructuresInCSharp
 
     public class MinHeap : Heap
     {
-        public override void heapifyDown()
+        protected override void heapifyDown()
         {
             int index = 0;
             while (hasLeftChild(index))
@@ -245,7 +261,7 @@ namespace DataStructuresInCSharp
             }
         }
 
-        public override void heapifyUp()
+        protected override void heapifyUp()
         {
             int index = size - 1;
 
@@ -259,7 +275,46 @@ namespace DataStructuresInCSharp
         }
     }
 
+    public class MedianHeap
+    {
+        int size = 0;
+        Heap minHeap;
+        Heap maxHeap;
 
+        public MedianHeap()
+        {
+            minHeap = new MinHeap();
+            maxHeap = new MaxHeap();
+        }
+
+        public void Add(int value)
+        {
+            Heap mHeap;
+            if (minHeap.IsEmpty)
+            {
+                mHeap = minHeap;
+            }
+            else if (maxHeap.IsEmpty)
+            {
+                mHeap = maxHeap;
+            }
+            else if (minHeap.Size <= maxHeap.Size)
+            {
+                mHeap = minHeap;
+            }
+            else
+            {
+                mHeap = maxHeap;
+            }
+        }
+
+        private void BalanceHeap()
+        {
+            if()
+        }
+
+
+    }
 
 
 }
