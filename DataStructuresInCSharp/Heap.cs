@@ -7,39 +7,28 @@ namespace DataStructuresInCSharp
     public abstract class Heap
     {
         /** Current array length **/
-        protected int capacity;
-        /** Current number of elements in Heap **/
-        protected int size;
+        protected int Capacity;
+        
+       
         /** Array of Heap elements **/
-        protected int[] items;
+        protected int[] Items;
 
-        public Heap()
+        protected Heap()
         {
-            this.capacity = 10;
-            this.size = 0;
-            this.items = new int[capacity];
+            Capacity = 10;
+            Size = 0;
+            Items = new int[Capacity];
         }
 
-        public int Size
-        {
-            get
-            {
-                return size;
-            }
-        }
+        /** Current number of elements in Heap **/
+        public int Size { get; private set; }
 
-        public bool IsEmpty
-        {
-            get
-            {
-                return size == 0;
-            }
-        }
+        public bool IsEmpty => Size == 0;
 
         /** @param parentIndex The index of the parent element.
             @return The index of the left child.
         **/
-        protected int getLeftChildIndex(int parentIndex)
+        protected int GetLeftChildIndex(int parentIndex)
         {
             return 2 * parentIndex + 1;
         }
@@ -47,7 +36,7 @@ namespace DataStructuresInCSharp
         /** @param parentIndex The index of the parent element.
             @return The index of the right child.
         **/
-        protected int getRightChildIndex(int parentIndex)
+        protected int GetRightChildIndex(int parentIndex)
         {
             return 2 * parentIndex + 2;
         }
@@ -55,7 +44,7 @@ namespace DataStructuresInCSharp
         /** @param childIndex The index of the child element.
             @return The index of the parent element.
         **/
-        protected int getParentIndex(int childIndex)
+        protected int GetParentIndex(int childIndex)
         {
             return (childIndex - 1) / 2;
         }
@@ -64,89 +53,89 @@ namespace DataStructuresInCSharp
             @return true if the Heap contains enough elements to fill the left child index, 
                     false otherwise.
         **/
-        public bool hasLeftChild(int index)
+        public bool HasLeftChild(int index)
         {
-            return getLeftChildIndex(index) < size;
+            return GetLeftChildIndex(index) < Size;
         }
 
         /** @param index The index of the element you are checking.
             @return true if the Heap contains enough elements to fill the right child index, 
                     false otherwise.
         **/
-        public bool hasRightChild(int index)
+        public bool HasRightChild(int index)
         {
-            return getRightChildIndex(index) < size;
+            return GetRightChildIndex(index) < Size;
         }
 
         /** @param index The index of the element you are checking.
             @return true if the calculated parent index exists within array bounds
                     false otherwise.
         **/
-        public bool hasParent(int index)
+        public bool HasParent(int index)
         {
-            return getParentIndex(index) >= 0;
+            return GetParentIndex(index) >= 0;
         }
 
         /** @param index The index of the element whose child you want.
             @return the value in the left child.
         **/
-        public int leftChild(int index)
+        public int LeftChild(int index)
         {
-            return items[getLeftChildIndex(index)];
+            return Items[GetLeftChildIndex(index)];
         }
 
         /** @param index The index of the element whose child you want.
             @return the value in the right child.
         **/
-        public int rightChild(int index)
+        public int RightChild(int index)
         {
-            return items[getRightChildIndex(index)];
+            return Items[GetRightChildIndex(index)];
         }
 
         /** @param index The index of the element you are checking.
             @return the value in the parent element.
         **/
-        public int parent(int index)
+        public int Parent(int index)
         {
-            return items[getParentIndex(index)];
+            return Items[GetParentIndex(index)];
         }
 
         /** @param indexOne The first index for the pair of elements being swapped.
             @param indexTwo The second index for the pair of elements being swapped.
         **/
-        protected void swap(int indexOne, int indexTwo)
+        protected void Swap(int indexOne, int indexTwo)
         {
-            int temp = items[indexOne];
-            items[indexOne] = items[indexTwo];
-            items[indexTwo] = temp;
+            int temp = Items[indexOne];
+            Items[indexOne] = Items[indexTwo];
+            Items[indexTwo] = temp;
         }
 
         /** Doubles underlying array if capacity is reached. **/
-        protected void ensureCapacity()
+        protected void EnsureCapacity()
         {
-            if (size == capacity)
+            if (Size == Capacity)
             {
-                capacity = capacity << 1;
-                int[] newArray = new int[capacity];
-                Array.Copy(items, newArray, items.Length);
-                items = newArray;
+                Capacity = Capacity << 1;
+                int[] newArray = new int[Capacity];
+                Array.Copy(Items, newArray, Items.Length);
+                Items = newArray;
             }
         }
 
         /** @throws IllegalStateException if Heap is empty.
             @return The value at the top of the Heap.
          **/
-        public int peek()
+        public int Peek()
         {
-            isEmpty("peek");
+            ThrowEmptyException("peek");
 
-            return items[0];
+            return Items[0];
         }
 
         /** @throws IllegalStateException if Heap is empty. **/
-        private void isEmpty(String methodName)
+        private void ThrowEmptyException(String methodName)
         {
-            if (size == 0)
+            if (Size == 0)
             {
                 throw new Exception(
                     "You cannot perform '" + methodName + "' on an empty Heap."
@@ -157,165 +146,124 @@ namespace DataStructuresInCSharp
         /** Extracts root element from Heap.
             @throws IllegalStateException if Heap is empty.
         **/
-        public int poll()
+        public int Poll()
         {
             // Throws an exception if empty.
-            isEmpty("poll");
+            ThrowEmptyException("poll");
 
             // Else, not empty
-            int item = items[0];
-            items[0] = items[size - 1];
-            size--;
-            heapifyDown();
+            int item = Items[0];
+            Items[0] = Items[Size - 1];
+            Size--;
+            HeapifyDown();
             return item;
         }
 
         /** @param item The value to be inserted into the Heap. **/
-        public void add(int item)
+        public void Add(int item)
         {
             // Resize underlying array if it's not large enough for insertion
-            ensureCapacity();
+            EnsureCapacity();
 
             // Insert value at the next open location in heap
-            items[size] = item;
-            size++;
+            Items[Size] = item;
+            Size++;
 
             // Correct order property
-            heapifyUp();
+            HeapifyUp();
         }
 
         /** Swap values down the Heap. **/
-        protected abstract void heapifyDown();
+        protected abstract void HeapifyDown();
 
         /** Swap values up the Heap. **/
-        protected abstract void heapifyUp();
+        protected abstract void HeapifyUp();
     }
 
     public class MaxHeap : Heap
     {
-        protected override void heapifyDown()
+        protected override void HeapifyDown()
         {
             int index = 0;
-            while (hasLeftChild(index))
+            while (HasLeftChild(index))
             {
-                int smallerChildIndex = getLeftChildIndex(index);
+                int smallerChildIndex = GetLeftChildIndex(index);
 
-                if (hasRightChild(index)
-                    && rightChild(index) > leftChild(index)
+                if (HasRightChild(index)
+                    && RightChild(index) > LeftChild(index)
                 )
                 {
-                    smallerChildIndex = getRightChildIndex(index);
+                    smallerChildIndex = GetRightChildIndex(index);
                 }
 
-                if (items[index] > items[smallerChildIndex])
+                if (Items[index] > Items[smallerChildIndex])
                 {
                     break;
                 }
                 else
                 {
-                    swap(index, smallerChildIndex);
+                    Swap(index, smallerChildIndex);
                 }
                 index = smallerChildIndex;
             }
         }
 
-        protected override void heapifyUp()
+        protected override void HeapifyUp()
         {
-            int index = size - 1;
+            int index = Size - 1;
 
-            while (hasParent(index)
-                 && parent(index) < items[index]
+            while (HasParent(index)
+                 && Parent(index) < Items[index]
                 )
             {
-                swap(getParentIndex(index), index);
-                index = getParentIndex(index);
+                Swap(GetParentIndex(index), index);
+                index = GetParentIndex(index);
             }
         }
     }
 
     public class MinHeap : Heap
     {
-        protected override void heapifyDown()
+        protected override void HeapifyDown()
         {
             int index = 0;
-            while (hasLeftChild(index))
+            while (HasLeftChild(index))
             {
-                int smallerChildIndex = getLeftChildIndex(index);
+                int smallerChildIndex = GetLeftChildIndex(index);
 
-                if (hasRightChild(index)
-                    && rightChild(index) < leftChild(index)
+                if (HasRightChild(index)
+                    && RightChild(index) < LeftChild(index)
                 )
                 {
-                    smallerChildIndex = getRightChildIndex(index);
+                    smallerChildIndex = GetRightChildIndex(index);
                 }
 
-                if (items[index] < items[smallerChildIndex])
+                if (Items[index] < Items[smallerChildIndex])
                 {
                     break;
                 }
                 else
                 {
-                    swap(index, smallerChildIndex);
+                    Swap(index, smallerChildIndex);
                 }
                 index = smallerChildIndex;
             }
         }
 
-        protected override void heapifyUp()
+        protected override void HeapifyUp()
         {
-            int index = size - 1;
+            int index = Size - 1;
 
-            while (hasParent(index)
-                 && parent(index) > items[index]
+            while (HasParent(index)
+                 && Parent(index) > Items[index]
                 )
             {
-                swap(getParentIndex(index), index);
-                index = getParentIndex(index);
+                Swap(GetParentIndex(index), index);
+                index = GetParentIndex(index);
             }
         }
     }
-
-    public class MedianHeap
-    {
-        int size = 0;
-        Heap minHeap;
-        Heap maxHeap;
-
-        public MedianHeap()
-        {
-            minHeap = new MinHeap();
-            maxHeap = new MaxHeap();
-        }
-
-        public void Add(int value)
-        {
-            Heap mHeap;
-            if (minHeap.IsEmpty)
-            {
-                mHeap = minHeap;
-            }
-            else if (maxHeap.IsEmpty)
-            {
-                mHeap = maxHeap;
-            }
-            else if (minHeap.Size <= maxHeap.Size)
-            {
-                mHeap = minHeap;
-            }
-            else
-            {
-                mHeap = maxHeap;
-            }
-        }
-
-        private void BalanceHeap()
-        {
-            if()
-        }
-
-
-    }
-
+    
 
 }
 
